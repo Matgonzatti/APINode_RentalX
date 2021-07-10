@@ -8,6 +8,7 @@ class CreateCategoryController {
 
   handle(request: Request, response: Response): Response {
     const { name, description } = request.body;
+    const { user_id } = request.headers;
 
     this.createCategoryUseCase.execute({ name, description });
 
