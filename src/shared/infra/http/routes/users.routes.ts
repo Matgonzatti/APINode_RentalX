@@ -7,6 +7,7 @@ import { UpdateUserAvatarController } from '@modules/accounts/useCases/updateUse
 
 import uploadConfig from '@config/upload';
 import { ensureAuthenticated } from '@shared/infra/http/middlewares/ensureAuthenticated';
+import { ensureAdmin } from '../middlewares/ensureAdmin';
 
 const userRoutes = Router();
 
@@ -16,13 +17,13 @@ const createUserController = new CreateUserController();
 const listUsersListController = new ListUsersController();
 const updateUserAvatarController = new UpdateUserAvatarController();
 
-userRoutes.post("/", createUserController.handle);
-userRoutes.get("/", listUsersListController.handle);
+userRoutes.post("/", ensureAuthenticated, ensureAdmin, createUserController.handle);
 userRoutes.patch(
   "/avatar",  
   ensureAuthenticated,
   uploadAvatar.single("avatar"), 
   updateUserAvatarController.handle
-);
+  );  
+userRoutes.get("/", listUsersListController.handle);
 
 export { userRoutes }
